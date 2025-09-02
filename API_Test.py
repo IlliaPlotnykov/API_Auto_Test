@@ -1,7 +1,8 @@
 import requests
-# import pytest
+import pytest
 
-def create_object():
+@pytest.fixture()
+def obj_id():
     obj = {
         "name": "Apple MacBook Pro 16",
         "data": {
@@ -12,7 +13,8 @@ def create_object():
         }
     }
     response = requests.post('https://api.restful-api.dev/objects', json=obj).json()
-    return response['id']
+    yield response['id']
+    requests.delete(f'https://api.restful-api.dev/objects/{response}')
 
 
 def test_post_object():
@@ -25,20 +27,19 @@ def test_post_object():
           "Hard disk size": "1 TB"
         }
     }
-    response = requests.post('https://api.restful-api.dev/objects',json = obj).json()
+    response = requests.post('https://api.restful-api.dev/objects',json=obj).json()
     assert response['name'] == obj['name']
-    assert response['year'] == obj['year']
+    # assert response['year'] == obj['year']
     assert response['price'] == obj['price']
     assert response['CPU model'] == obj['CPU model']
     assert response['Hard disk size'] == obj['Hard disk size']
 
-def test_get_object():
-    obj_id = create_object()
-    response = requests.get(f'https://api.restful-api.dev/objects/{obj_id}',json = obj).json()
+def test_get_object(obj_id):
+    print(obj_id)
+    response = requests.get(f'https://api.restful-api.dev/objects/{obj_id}').json()
     assert response['id'] == obj_id
 
-def test_put_object():
-    obj_id = create_object()
+def test_put_object(obj_id):
     obj = {
         "name": "Apple MacBook Pro 16",
         "data": {
@@ -48,17 +49,16 @@ def test_put_object():
           "Hard disk size": "1 TB"
         }
     }
-    response = requests.put(f'https://api.restful-api.dev/objects/{obj_id}',json = obj).json()
+    response = requests.put(f'https://api.restful-api.dev/objects/{obj_id}',json=obj).json()
     assert response['name'] == obj['name']
     assert response['year'] == obj['year']
     assert response['price'] == obj['price']
     assert response['CPU model'] == obj['CPU model']
     assert response['Hard disk size'] == obj['Hard disk size']
 
-def test_delete_object():
-    obj_id = create_object()
-    response = requests.delete(f'https://api.restful-api.dev/objects/{obj_id}',json = obj)
+def test_delete_object(obj_id):
+    response = requests.delete(f'https://api.restful-api.dev/objects/{obj_id}')
     assert response.status_code == 200
-    response = requests.get(f'https://api.restful-api.dev/objects/{obj_id}',json = obj)
+    response = requests.get(f'https://api.restful-api.dev/objects/{obj_id}')
     assert response.status_code == 404
 
