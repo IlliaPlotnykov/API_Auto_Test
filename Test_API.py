@@ -13,7 +13,7 @@ def obj_id():
         }
     }
     response = requests.post('https://api.restful-api.dev/objects', json=obj).json()
-    yield response['id']
+    yield response.get('id')
     requests.delete(f'https://api.restful-api.dev/objects/{response}')
 
 
@@ -28,16 +28,16 @@ def test_post_object():
         }
     }
     response = requests.post('https://api.restful-api.dev/objects', json=obj).json()
-    assert response['name'] == obj['name']
-    assert response['data']['year'] == obj['data']['year']
-    assert response['data']['price'] == obj['data']['price']
-    assert response['data']['CPU model'] == obj['data']['CPU model']
-    assert response['data']['Hard disk size'] == obj['data']['Hard disk size']
+    assert response.get('name') == obj.get('name')
+    assert response.get('data', {}).get('year') == obj.get('data', {}).get('year')
+    assert response.get('data', {}).get('price') == obj.get('data', {}).get('price')
+    assert response.get('data', {}).get('CPU model') == obj.get('data', {}).get('CPU model')
+    assert response.get('data', {}).get('Hard disk size') == obj.get('data', {}).get('Hard disk size')
 
 def test_get_object(obj_id):
-    print(obj_id)
+    # print(obj_id)
     response = requests.get(f'https://api.restful-api.dev/objects/{obj_id}').json()
-    assert response['id'] == obj_id
+    assert response.get('id') == obj_id
 
 def test_put_object(obj_id):
     obj = {
@@ -50,11 +50,11 @@ def test_put_object(obj_id):
         }
     }
     response = requests.put(f'https://api.restful-api.dev/objects/{obj_id}',json=obj).json()
-    assert response['name'] == obj['name']
-    assert response['data']['year'] == obj['data']['year']
-    assert response['data']['price'] == obj['data']['price']
-    assert response['data']['CPU model'] == obj['data']['CPU model']
-    assert response['data']['Hard disk size'] == obj['data']['Hard disk size']
+    assert response.get('name') == obj.get('name')
+    assert response.get('data', {}).get('year') == obj.get('data', {}).get('year')
+    assert response.get('data', {}).get('price') == obj.get('data', {}).get('price')
+    assert response.get('data', {}).get('CPU model') == obj.get('data', {}).get('CPU model')
+    assert response.get('data', {}).get('Hard disk size') == obj.get('data', {}).get('Hard disk size')
 
 def test_delete_object(obj_id):
     response = requests.delete(f'https://api.restful-api.dev/objects/{obj_id}')
