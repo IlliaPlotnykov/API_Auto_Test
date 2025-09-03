@@ -27,12 +27,12 @@ def test_post_object():
           "Hard disk size": "1 TB"
         }
     }
-    response = requests.post('https://api.restful-api.dev/objects',json=obj).json()
+    response = requests.post('https://api.restful-api.dev/objects', json=obj).json()
     assert response['name'] == obj['name']
-    # assert response['year'] == obj['year']
-    assert response['price'] == obj['price']
-    assert response['CPU model'] == obj['CPU model']
-    assert response['Hard disk size'] == obj['Hard disk size']
+    assert response['data']['year'] == obj['data']['year']
+    assert response['data']['price'] == obj['data']['price']
+    assert response['data']['CPU model'] == obj['data']['CPU model']
+    assert response['data']['Hard disk size'] == obj['data']['Hard disk size']
 
 def test_get_object(obj_id):
     print(obj_id)
@@ -51,14 +51,13 @@ def test_put_object(obj_id):
     }
     response = requests.put(f'https://api.restful-api.dev/objects/{obj_id}',json=obj).json()
     assert response['name'] == obj['name']
-    assert response['year'] == obj['year']
-    assert response['price'] == obj['price']
-    assert response['CPU model'] == obj['CPU model']
-    assert response['Hard disk size'] == obj['Hard disk size']
+    assert response['data']['year'] == obj['data']['year']
+    assert response['data']['price'] == obj['data']['price']
+    assert response['data']['CPU model'] == obj['data']['CPU model']
+    assert response['data']['Hard disk size'] == obj['data']['Hard disk size']
 
 def test_delete_object(obj_id):
     response = requests.delete(f'https://api.restful-api.dev/objects/{obj_id}')
     assert response.status_code == 200
     response = requests.get(f'https://api.restful-api.dev/objects/{obj_id}')
     assert response.status_code == 404
-
